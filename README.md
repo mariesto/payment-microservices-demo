@@ -79,3 +79,6 @@ We’re going to implement mixed communication type, which sync and async.
 
 High-Level Design
 ![image](./assets/payment-microservices-hld.png)
+
+Low-Level Design (ERD)
+![image](./assets/payment-microservices-erd.png)
