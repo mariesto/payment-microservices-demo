@@ -1,14 +1,12 @@
 # Develop Payment Application with Microservices Architecture
 
-### Services
+### Architecture
 
-- payment-service
-- wallet-service
-- payment-provider-gateway-service
-- order-service
-- user-service
-- gateway-service
-- registry-service
+High-Level Design
+![image](./assets/payment-microservices-hld.png)
+
+Low-Level Design (ERD)
+![image](./assets/payment-microservices-erd.png)
 
 ---
 
@@ -56,14 +54,15 @@
 
 ### Tech stack
 
+| Name                  | Descriptions                       |
+|-----------------------|------------------------------------|
 | Spring boot + Java 11 | Framework and programming language |
-| --- | --- |
-| MySQL  | Database |
-| Kong | API Gateway |
-| Consul | Service Discovery |
-| RabbitMQ | Messaging Platform |
-| Jaeger | Tracing capability |
-| Prometheus | Monitoring |
+| MySQL                 | Database                           |
+| Kong                  | API Gateway                        |
+| Consul                | Service Discovery                  |
+| RabbitMQ              | Messaging Platform                 |
+| Jaeger                | Tracing capability                 |
+| Prometheus            | Monitoring                         |
 
 ### Service communication
 
@@ -73,12 +72,3 @@ We’re going to implement mixed communication type, which sync and async.
    `payment-service` → `payment-gateway-service`
 2. Async communication will be done through messaging (RabbitMQ) and using Pub/Sub pattern.
 
----
-
-### Architecture
-
-High-Level Design
-![image](./assets/payment-microservices-hld.png)
-
-Low-Level Design (ERD)
-![image](./assets/payment-microservices-erd.png)
