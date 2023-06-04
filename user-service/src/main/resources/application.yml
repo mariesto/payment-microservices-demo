@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: user-service
+  jpa:
+    show-sql: true
+    database: mysql
+  datasource:
+    username: root
+    password: root
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://user-db/users
+
+
+server:
+  port: 9991
+

@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: wallet-service
+  jpa:
+    database: postgresql
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: create
+    generate-ddl: true
+    defer-datasource-initialization: true
+  sql:
+    init:
+      mode: always
+      platform: postgres
+      schema-locations: classpath:/data.sql
+  datasource:
+    url: jdbc:postgresql://wallet-db:5432/wallet-db?createDatabaseIfNotExist=true
+    username: postgres
+    password: wallet123
+    driver-class-name: org.postgresql.Driver
+
+rabbit-mq:
+  queue-name: wallet
+  durable: true
+  exclusive: false
+  auto-delete: false
+
+server:
+  port: 9994
+
+logging:
+  level:
+    com.rabbitmq: debug
+
+management:
+  health:
+    rabbit:
+      enabled: true

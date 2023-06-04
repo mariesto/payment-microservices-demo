@@ -1,0 +1,1 @@
+INSERT INTO wallet(user_id, balance, created_at, updated_at) VALUES ('6bdf3a30-b07e-4bab-a40f-d16f5c59a04f', 100000.0, TIMESTAMP '2022-04-04 11:33:30', TIMESTAMP '2022-04-04 11:33:30')

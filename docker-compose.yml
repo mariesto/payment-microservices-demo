@@ -1,0 +1,62 @@
+version: "3.9"
+services:
+  rabbit-mq:
+    container_name: rabbit-mq
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - payment-microservices-network
+    volumes:
+      - ./rabbitmq/definitions.json:/etc/rabbitmq/definitions.json:ro
+      - ./rabbitmq/rabbitmq.config:/etc/rabbitmq/rabbitmq.config:ro
+
+  wallet-db:
+    container_name: wallet-db
+    image: postgres:14
+    environment:
+      POSTGRES_DB: wallet-db
+      POSTGRES_USERNAME: wallet
+      POSTGRES_PASSWORD: wallet123
+    ports:
+      - "9954:9954"
+    volumes:
+      - wallet-db-data:/var/lib/postgresql/data
+    networks:
+      - payment-microservices-network
+
+  wallet-service:
+    container_name: wallet-service
+    image: wallet-service
+    ports:
+      - "9994:9994"
+    depends_on:
+      - rabbit-mq
+      - wallet-db
+    networks:
+      - payment-microservices-network
+    environment:
+      RABBIT_MQ_HOST: rabbit-mq
+
+  pg-admin:
+    container_name: pg-admin
+    image: dpage/pgadmin4
+    depends_on:
+      - wallet-db
+    ports:
+      - "5051:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: sitinjakamendo@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: amendo123
+    restart: unless-stopped
+    networks:
+      - payment-microservices-network
+
+volumes:
+  wallet-db-data:
+    driver: local
+
+networks:
+  payment-microservices-network:
+    driver: bridge
