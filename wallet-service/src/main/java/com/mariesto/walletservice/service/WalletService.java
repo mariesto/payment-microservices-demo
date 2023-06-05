@@ -1,41 +1,29 @@
 package com.mariesto.walletservice.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import com.mariesto.walletservice.dto.TransactionDTO;
-import com.mariesto.walletservice.dto.WalletDTO;
-import com.mariesto.walletservice.service.command.CreditCommand;
-import com.mariesto.walletservice.service.command.DebitCommand;
-import com.mariesto.walletservice.service.command.TopUpCommand;
+import com.mariesto.walletservice.persistence.entity.WalletTransaction;
+import com.mariesto.walletservice.persistence.repository.WalletTransactionsRepository;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
 public class WalletService {
-    private final TopUpCommand topUpCommand;
+    private final WalletTransactionsRepository walletTransactionsRepository;
 
-    private final CreditCommand creditCommand;
+    private final ModelMapper modelMapper;
 
-    private final DebitCommand debitCommand;
-
-    public WalletService(TopUpCommand topUpCommand, CreditCommand creditCommand, DebitCommand debitCommand) {
-        this.topUpCommand = topUpCommand;
-        this.creditCommand = creditCommand;
-        this.debitCommand = debitCommand;
+    public WalletService(WalletTransactionsRepository walletTransactionsRepository, ModelMapper modelMapper) {
+        this.walletTransactionsRepository = walletTransactionsRepository;
+        this.modelMapper = modelMapper;
     }
 
-    @Transactional
-    public WalletDTO topUp(TransactionDTO dto) {
-        return topUpCommand.execute(dto);
-    }
-
-    @Transactional
-    public WalletDTO performCreditTransaction(TransactionDTO dto) {
-        return creditCommand.execute(dto);
-    }
-
-    @Transactional
-    public WalletDTO performDebitTransaction(TransactionDTO dto) {
-        return debitCommand.execute(dto);
+    public List<TransactionDTO> getUserTransactions(String userId) {
+        List<WalletTransaction> walletTransactions = walletTransactionsRepository.findAllByWalletUserId(userId);
+        return walletTransactions.stream().map(walletTransaction -> modelMapper.map(walletTransactions, TransactionDTO.class))
+                                 .collect(Collectors.toList());
     }
 }

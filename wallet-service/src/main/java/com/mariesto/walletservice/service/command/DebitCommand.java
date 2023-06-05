@@ -12,7 +12,6 @@ import com.mariesto.walletservice.persistence.entity.Wallet;
 import com.mariesto.walletservice.persistence.entity.WalletTransaction;
 import com.mariesto.walletservice.persistence.repository.WalletRepository;
 import com.mariesto.walletservice.persistence.repository.WalletTransactionsRepository;
-import com.mariesto.walletservice.service.WalletCommand;
 
 @Component
 public class DebitCommand implements WalletCommand {
@@ -31,7 +30,7 @@ public class DebitCommand implements WalletCommand {
     }
 
     @Override
-    public WalletDTO execute(TransactionDTO transactionDTO) {
+    public void execute(TransactionDTO transactionDTO) {
         final Optional<Wallet> wallet = walletRepository.findWalletByUserId(transactionDTO.getUserId());
         if (wallet.isEmpty()) {
             LOG.error("wallet not found for user id : {}", transactionDTO.getUserId());
@@ -45,6 +44,6 @@ public class DebitCommand implements WalletCommand {
         walletRepository.updateWalletBalance(finalBalance, transactionDTO.getUserId());
         LOG.info("final user wallet balance : {}", fetchedWallet.getBalance());
 
-        return modelMapper.map(fetchedWallet, WalletDTO.class);
+        modelMapper.map(fetchedWallet, WalletDTO.class);
     }
 }

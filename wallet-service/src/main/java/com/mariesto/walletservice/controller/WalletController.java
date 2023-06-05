@@ -1,12 +1,12 @@
 package com.mariesto.walletservice.controller;
 
+import java.util.List;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.mariesto.walletservice.dto.TransactionDTO;
-import com.mariesto.walletservice.dto.WalletDTO;
 import com.mariesto.walletservice.service.WalletService;
 
 @RestController
@@ -18,21 +18,9 @@ public class WalletController {
         this.walletService = walletService;
     }
 
-    @PostMapping ("top-up")
-    public ResponseEntity<WalletDTO> topUpBalance(@RequestBody TransactionDTO dto) {
-        WalletDTO walletDTO = walletService.topUp(dto);
-        return ResponseEntity.ok().body(walletDTO);
-    }
-
-    @PostMapping ("/credit")
-    public ResponseEntity<WalletDTO> creditTransaction(@RequestBody TransactionDTO dto) {
-        WalletDTO walletDTO = walletService.performCreditTransaction(dto);
-        return ResponseEntity.ok().body(walletDTO);
-    }
-
-    @PostMapping ("/debit")
-    public ResponseEntity<WalletDTO> debitTransaction(@RequestBody TransactionDTO dto) {
-        WalletDTO walletDTO = walletService.performDebitTransaction(dto);
-        return ResponseEntity.ok().body(walletDTO);
+    @GetMapping ("/transactions/{userId}")
+    public ResponseEntity<List<TransactionDTO>> fetchUserTransaction(@PathVariable ("userId") String userId) {
+        List<TransactionDTO> userTransactions = walletService.getUserTransactions(userId);
+        return ResponseEntity.ok().body(userTransactions);
     }
 }

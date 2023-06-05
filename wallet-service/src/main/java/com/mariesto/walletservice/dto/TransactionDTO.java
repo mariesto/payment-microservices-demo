@@ -10,6 +10,6 @@ public class TransactionDTO implements Serializable {
 
     private Double amount;
 
-    private String customerPaymentId;
+    private String paymentReferenceId;
 
 }

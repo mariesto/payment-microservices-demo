@@ -5,7 +5,7 @@ import com.mariesto.walletservice.config.RabbitMqConfigProps;
 import com.mariesto.walletservice.controller.WalletController;
 import com.mariesto.walletservice.persistence.repository.WalletRepository;
 import com.mariesto.walletservice.persistence.repository.WalletTransactionsRepository;
-import com.mariesto.walletservice.service.RabbitMqMessageListener;
+import com.mariesto.walletservice.service.listener.WalletListener;
 import com.mariesto.walletservice.service.WalletService;
 import com.mariesto.walletservice.service.command.CreditCommand;
 import com.mariesto.walletservice.service.command.DebitCommand;
@@ -22,7 +22,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @Slf4j
 @ComponentScan(basePackageClasses = {WalletController.class, WalletService.class,
     CreditCommand.class, DebitCommand.class, TopUpCommand.class, WalletRepository.class,
-    WalletTransactionsRepository.class, RabbitMqConfig.class, RabbitMqMessageListener.class})
+    WalletTransactionsRepository.class, RabbitMqConfig.class, WalletListener.class})
 @EnableConfigurationProperties(value = RabbitMqConfigProps.class)
 @EnableJpaRepositories
 @SpringBootApplication

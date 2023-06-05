@@ -22,11 +22,18 @@ spring:
     password: wallet123
     driver-class-name: org.postgresql.Driver
 
-rabbit-mq:
-  queue-name: wallet
+rabbit-mq-props:
+  host: rabbit-mq
   durable: true
   exclusive: false
   auto-delete: false
+  to-pup-queue: wallet.queue.top-up
+  credit-queue: wallet.queue.credit
+  debit-queue: wallet.queue.debit
+  exchange: wallet-exchange
+  top-up-key: wallet.top-up
+  credit-key: wallet.credit
+  debit-key: wallet.debit
 
 server:
   port: 9994

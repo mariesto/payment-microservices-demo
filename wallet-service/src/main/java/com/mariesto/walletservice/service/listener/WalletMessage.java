@@ -1,4 +1,4 @@
-package com.mariesto.walletservice.service;
+package com.mariesto.walletservice.service.listener;
 
 import java.io.Serializable;
 import javax.validation.Valid;
@@ -13,12 +13,14 @@ import lombok.ToString;
 @Setter
 @ToString
 public class WalletMessage implements Serializable {
+    @NotNull
+    @Valid
+    private String userId;
 
-  @NotNull
-  @Valid
-  private String name;
+    @NotNull
+    @Valid
+    private Double amount;
 
-  @NotNull
-  @Valid
-  private int age;
+    @Valid
+    private String paymentReferenceId;
 }

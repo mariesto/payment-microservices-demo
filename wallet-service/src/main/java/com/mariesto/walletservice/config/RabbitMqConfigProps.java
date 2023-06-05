@@ -6,14 +6,28 @@ import org.springframework.stereotype.Component;
 
 @Data
 @Component
-@ConfigurationProperties(prefix = "rabbit-mq")
+@ConfigurationProperties(prefix = "rabbit-mq-props")
 public class RabbitMqConfigProps {
 
-  private String queueName;
+  private String host;
 
   private boolean durable;
 
   private boolean exclusive;
 
   private boolean autoDelete;
+
+  private String topUpQueue;
+
+  private String creditQueue;
+
+  private String debitQueue;
+
+  private String exchange;
+
+  private String topUpKey;
+
+  private String creditKey;
+
+  private String debitKey;
 }
