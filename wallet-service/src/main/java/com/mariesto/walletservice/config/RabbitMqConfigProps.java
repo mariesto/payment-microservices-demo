@@ -23,6 +23,8 @@ public class RabbitMqConfigProps {
 
   private String debitQueue;
 
+  private String walletCreateQueue;
+
   private String exchange;
 
   private String topUpKey;
@@ -30,4 +32,6 @@ public class RabbitMqConfigProps {
   private String creditKey;
 
   private String debitKey;
+
+  private String walletCreateKey;
 }

@@ -67,6 +67,12 @@ public class RabbitMqConfig {
     }
 
     @Bean
+    public Queue userCreateQueue() {
+        return new Queue(rabbitMqConfigProps.getWalletCreateQueue(), rabbitMqConfigProps.isDurable(), rabbitMqConfigProps.isExclusive(),
+                rabbitMqConfigProps.isAutoDelete());
+    }
+
+    @Bean
     public TopicExchange exchange() {
         return new TopicExchange(rabbitMqConfigProps.getExchange());
     }
@@ -84,5 +90,10 @@ public class RabbitMqConfig {
     @Bean
     public Binding debitBinding() {
         return BindingBuilder.bind(debitQueue()).to(exchange()).with(rabbitMqConfigProps.getDebitKey());
+    }
+
+    @Bean
+    public Binding userCreateBinding() {
+        return BindingBuilder.bind(userCreateQueue()).to(exchange()).with(rabbitMqConfigProps.getWalletCreateKey());
     }
 }

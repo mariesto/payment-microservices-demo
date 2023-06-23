@@ -2,8 +2,10 @@ package com.mariesto.walletservice.persistence.entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.Getter;
@@ -21,6 +23,6 @@ public class Wallet extends BaseEntity {
     @Column
     private Double balance;
 
-    @OneToMany (mappedBy = "wallet")
+    @OneToMany (mappedBy = "wallet", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<WalletTransaction> transactions = new ArrayList<>();
 }

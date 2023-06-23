@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import com.mariesto.walletservice.constant.TransactionType;
 import com.mariesto.walletservice.dto.TransactionDTO;
-import com.mariesto.walletservice.dto.WalletDTO;
 import com.mariesto.walletservice.persistence.entity.Wallet;
 import com.mariesto.walletservice.persistence.entity.WalletTransaction;
 import com.mariesto.walletservice.persistence.repository.WalletRepository;
@@ -17,8 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 public class CreditCommand implements WalletCommand {
-
-    private final Logger LOG = LoggerFactory.getLogger(CreditCommand.class);
+    private final Logger logger = LoggerFactory.getLogger(CreditCommand.class);
 
     private final WalletRepository walletRepository;
 
@@ -35,8 +33,9 @@ public class CreditCommand implements WalletCommand {
     @Override
     public void execute(TransactionDTO transactionDTO) {
         final Optional<Wallet> wallet = walletRepository.findWalletByUserId(transactionDTO.getUserId());
-        if (wallet.isEmpty()){
-            LOG.error("wallet not found for user id : {}", transactionDTO.getUserId());
+        if (wallet.isEmpty()) {
+            logger.error("wallet not found for user id : {}", transactionDTO.getUserId());
+            return;
         }
         WalletTransaction walletTransaction = modelMapper.map(transactionDTO, WalletTransaction.class);
         walletTransaction.setTransactionType(TransactionType.CREDIT);
@@ -45,8 +44,5 @@ public class CreditCommand implements WalletCommand {
         final Wallet fetchedWallet = wallet.get();
         Double finalBalance = fetchedWallet.getBalance() - transactionDTO.getAmount();
         walletRepository.updateWalletBalance(finalBalance, transactionDTO.getUserId());
-        LOG.info("final user wallet balance : {}", fetchedWallet.getBalance());
-
-        modelMapper.map(fetchedWallet, WalletDTO.class);
     }
 }

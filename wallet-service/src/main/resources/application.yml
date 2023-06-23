@@ -11,11 +11,6 @@ spring:
       ddl-auto: create
     generate-ddl: true
     defer-datasource-initialization: true
-  sql:
-    init:
-      mode: always
-      platform: postgres
-      schema-locations: classpath:/data.sql
   datasource:
     url: jdbc:postgresql://wallet-db:5432/wallet-db?createDatabaseIfNotExist=true
     username: postgres
@@ -30,10 +25,12 @@ rabbit-mq-props:
   to-pup-queue: wallet.queue.top-up
   credit-queue: wallet.queue.credit
   debit-queue: wallet.queue.debit
+  wallet-create-queue: wallet.queue.create
   exchange: wallet-exchange
   top-up-key: wallet.top-up
   credit-key: wallet.credit
   debit-key: wallet.debit
+  wallet-create-key: wallet.create
 
 server:
   port: 9994

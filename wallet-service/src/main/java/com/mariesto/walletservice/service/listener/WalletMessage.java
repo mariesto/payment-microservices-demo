@@ -21,6 +21,4 @@ public class WalletMessage implements Serializable {
     @Valid
     private Double amount;
 
-    @Valid
-    private String paymentReferenceId;
 }
