@@ -4,9 +4,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class UserServiceApplicationTests {
+class UserServiceApplicationTest {
     @Test
-    void contextLoads() {
+    void name() {
+        System.out.println("Hello World");
     }
-
 }

@@ -2,7 +2,7 @@
 
 MODULES_DIR="/Users/amendomariestositinjak/Desktop/projects/payment-microservices-demo/payment-microservices-demo"
 
-MODULES=( "wallet-service" )
+MODULES=( "wallet-service" "payment-service" )
 
 for MODULE in "${MODULES[@]}"
 do

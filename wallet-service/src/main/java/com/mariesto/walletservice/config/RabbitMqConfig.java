@@ -27,13 +27,15 @@ public class RabbitMqConfig {
     public ConnectionFactory amqpConnectionFactory() {
         ConnectionFactory connectionFactory = new ConnectionFactory();
         connectionFactory.setHost(rabbitMqConfigProps.getHost());
-        log.debug("try to initialize connection factory : {}", connectionFactory);
+        log.info("try to initialize connection factory : {}", connectionFactory);
         return connectionFactory;
     }
 
     @Bean
     public CachingConnectionFactory connectionFactory() {
-        return new CachingConnectionFactory(amqpConnectionFactory());
+        CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory(amqpConnectionFactory());
+        log.info("cachingConnectionFactory created : {} with host : {}", cachingConnectionFactory, cachingConnectionFactory.getHost());
+        return cachingConnectionFactory;
     }
 
     @Bean
@@ -93,7 +95,7 @@ public class RabbitMqConfig {
     }
 
     @Bean
-    public Binding userCreateBinding() {
+    public Binding createWalletBinding() {
         return BindingBuilder.bind(userCreateQueue()).to(exchange()).with(rabbitMqConfigProps.getWalletCreateKey());
     }
 }

@@ -7,7 +7,7 @@ services:
       - "5672:5672"
       - "15672:15672"
     networks:
-      - payment-microservices-network
+        - payment-microservices-network
     volumes:
       - ./rabbitmq/definitions.json:/etc/rabbitmq/definitions.json:ro
       - ./rabbitmq/rabbitmq.config:/etc/rabbitmq/rabbitmq.config:ro
@@ -39,11 +39,39 @@ services:
     environment:
       RABBIT_MQ_HOST: rabbit-mq
 
+  payment-db:
+    container_name: payment-db
+    image: postgres:14
+    environment:
+      POSTGRES_DB: payment-db
+      POSTGRES_USERNAME: payment
+      POSTGRES_PASSWORD: payment123
+    volumes:
+      - payment-db-data:/var/lib/postgresql/data
+    ports:
+      - "9951:9951"
+    networks:
+      - payment-microservices-network
+
+  payment-service:
+    container_name: payment-service
+    image: payment-service
+    ports:
+      - "9991:9991"
+    depends_on:
+      - rabbit-mq
+      - payment-db
+    networks:
+      - payment-microservices-network
+    environment:
+      RABBIT_MQ_HOST: rabbit-mq
+
   pg-admin:
     container_name: pg-admin
     image: dpage/pgadmin4
     depends_on:
       - wallet-db
+      - payment-db
     ports:
       - "5051:80"
     environment:
@@ -55,6 +83,8 @@ services:
 
 volumes:
   wallet-db-data:
+    driver: local
+  payment-db-data:
     driver: local
 
 networks:

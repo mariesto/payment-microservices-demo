@@ -1,6 +1,10 @@
+server:
+  port: 9991
+
+
 spring:
   application:
-    name: wallet-service
+    name: payment-service
   jpa:
     database: postgresql
     show-sql: true
@@ -10,11 +14,10 @@ spring:
     hibernate:
       ddl-auto: create
     generate-ddl: true
-    defer-datasource-initialization: true
   datasource:
-    url: jdbc:postgresql://wallet-db:5432/wallet-db?createDatabaseIfNotExist=true
+    url: jdbc:postgresql://payment-db:5432/payment-db?createDatabaseIfNotExist=true
     username: postgres
-    password: wallet123
+    password: payment123
     driver-class-name: org.postgresql.Driver
 
 rabbit-mq-props:
@@ -22,24 +25,16 @@ rabbit-mq-props:
   durable: true
   exclusive: false
   auto-delete: false
-  to-pup-queue: wallet.queue.top-up
-  credit-queue: wallet.queue.credit
-  debit-queue: wallet.queue.debit
-  wallet-create-queue: wallet.queue.create
   exchange: wallet-exchange
   top-up-key: wallet.top-up
   credit-key: wallet.credit
   debit-key: wallet.debit
-  wallet-create-key: wallet.create
-
-server:
-  port: 9994
 
 logging:
   level:
-    root: info
     com.rabbitmq: info
-    com.mariesto.walletservice: info
+    com.mariesto.paymentservice: info
+    root: info
 
 management:
   health:

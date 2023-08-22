@@ -12,7 +12,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table (name = "wallet")
+@Table (name = "wallets")
 @Getter
 @Setter
 public class Wallet extends BaseEntity {
