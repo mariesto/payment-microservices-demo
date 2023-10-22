@@ -23,7 +23,7 @@ public class RabbitMqConfig {
     public ConnectionFactory amqpConnectionFactory() {
         ConnectionFactory connectionFactory = new ConnectionFactory();
         connectionFactory.setHost(rabbitMqConfigProps.getHost());
-        log.info("try to initialize connection factory : {}", connectionFactory.toString());
+        log.info("try to initialize connection factory : {}", connectionFactory);
         return connectionFactory;
     }
 

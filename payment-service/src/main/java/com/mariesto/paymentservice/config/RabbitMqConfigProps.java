@@ -8,7 +8,6 @@ import lombok.Data;
 @Component
 @ConfigurationProperties (prefix = "rabbit-mq-props")
 public class RabbitMqConfigProps {
-
     private String host;
 
     private boolean durable;

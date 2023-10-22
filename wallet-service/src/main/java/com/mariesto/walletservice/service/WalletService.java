@@ -5,20 +5,33 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import com.mariesto.walletservice.dto.TransactionDTO;
+import com.mariesto.walletservice.dto.WalletDTO;
+import com.mariesto.walletservice.persistence.entity.Wallet;
 import com.mariesto.walletservice.persistence.entity.WalletTransaction;
+import com.mariesto.walletservice.persistence.repository.WalletRepository;
 import com.mariesto.walletservice.persistence.repository.WalletTransactionsRepository;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
 public class WalletService {
+    private final WalletRepository walletRepository;
+
     private final WalletTransactionsRepository walletTransactionsRepository;
 
     private final ModelMapper modelMapper;
 
-    public WalletService(WalletTransactionsRepository walletTransactionsRepository, ModelMapper modelMapper) {
+    public WalletService(WalletRepository walletRepository, WalletTransactionsRepository walletTransactionsRepository, ModelMapper modelMapper) {
+        this.walletRepository = walletRepository;
         this.walletTransactionsRepository = walletTransactionsRepository;
         this.modelMapper = modelMapper;
+    }
+
+    public WalletDTO fetchUserWallet(String userId) {
+        log.info("fetching wallet for : {}", userId);
+        Wallet fetchedWallet = walletRepository.findWalletByUserId(userId);
+        log.info("result fetching wallet : {}", fetchedWallet.toString());
+        return modelMapper.map(fetchedWallet, WalletDTO.class);
     }
 
     public List<TransactionDTO> getUserTransactions(String userId) {
@@ -26,4 +39,5 @@ public class WalletService {
         return walletTransactions.stream().map(walletTransaction -> modelMapper.map(walletTransactions, TransactionDTO.class))
                                  .collect(Collectors.toList());
     }
+
 }

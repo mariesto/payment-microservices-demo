@@ -32,9 +32,9 @@ public class PaymentPublisher {
     }
 
     public void publishCreditEvent(PaymentMessage data) {
-        Message message = MessageBuilder.withBody(SerializationUtils.serialize(data)).setContentType(MessageProperties.CONTENT_TYPE_JSON).build();
-        log.info("publish credit message with content : {}", message);
-        amqpTemplate.send(topicExchange, creditRoutingKey, message);
+        //        Message message = MessageBuilder.withBody(SerializationUtils.serialize(data)).setContentType(MessageProperties.CONTENT_TYPE_JSON).build();
+        log.info("publish credit message with content : {}", data);
+        amqpTemplate.convertAndSend(topicExchange, creditRoutingKey, data);
     }
 
 }

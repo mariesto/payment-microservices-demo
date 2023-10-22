@@ -1,37 +1,36 @@
 package com.mariesto.walletservice.config;
 
-import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
+import lombok.Data;
 
 @Data
 @Component
-@ConfigurationProperties(prefix = "rabbit-mq-props")
+@ConfigurationProperties (prefix = "rabbit-mq-props")
 public class RabbitMqConfigProps {
+    private String host;
 
-  private String host;
+    private boolean durable;
 
-  private boolean durable;
+    private boolean exclusive;
 
-  private boolean exclusive;
+    private boolean autoDelete;
 
-  private boolean autoDelete;
+    private String topUpQueue;
 
-  private String topUpQueue;
+    private String creditQueue;
 
-  private String creditQueue;
+    private String debitQueue;
 
-  private String debitQueue;
+    private String walletCreateQueue;
 
-  private String walletCreateQueue;
+    private String exchange;
 
-  private String exchange;
+    private String topUpKey;
 
-  private String topUpKey;
+    private String creditKey;
 
-  private String creditKey;
+    private String debitKey;
 
-  private String debitKey;
-
-  private String walletCreateKey;
+    private String walletCreateKey;
 }

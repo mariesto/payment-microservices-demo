@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import com.mariesto.walletservice.constant.TransactionType;
 import com.mariesto.walletservice.dto.TransactionDTO;
 import com.mariesto.walletservice.persistence.entity.Wallet;
@@ -23,24 +24,22 @@ public class TopUpCommand implements WalletCommand {
         this.walletRepository = walletRepository;
     }
 
+    @Transactional
     @Override
     public void execute(TransactionDTO transactionDTO) {
-        Optional<Wallet> wallet = walletRepository.findWalletByUserId(transactionDTO.getUserId());
+        Optional<Wallet> wallet = Optional.ofNullable(walletRepository.findWalletByUserId(transactionDTO.getUserId()));
         if (wallet.isEmpty()) {
             logger.error("wallet not found for user id : {}", transactionDTO.getUserId());
             return;
         }
         Wallet fetchedWallet = wallet.get();
-
-        WalletTransaction walletTransaction = new WalletTransaction();
-        walletTransaction.setAmount(transactionDTO.getAmount());
-        walletTransaction.setTransactionType(TransactionType.TOP_UP);
-        walletTransaction.setCustomerPaymentId(UUID.randomUUID().toString());
-        walletTransaction.setWallet(fetchedWallet);
-        fetchedWallet.getTransactions().add(walletTransaction);
-        walletRepository.save(fetchedWallet);
-
         Double finalBalance = fetchedWallet.getBalance() + transactionDTO.getAmount();
-        walletRepository.updateWalletBalance(finalBalance, transactionDTO.getUserId());
+        fetchedWallet.setBalance(finalBalance);
+
+        WalletTransaction transaction = new WalletTransaction();
+        transaction.setTransactionType(TransactionType.TOP_UP);
+        transaction.setAmount(transactionDTO.getAmount());
+        transaction.setPaymentReferenceId(UUID.randomUUID().toString());
+        fetchedWallet.addTransaction(transaction);
     }
 }

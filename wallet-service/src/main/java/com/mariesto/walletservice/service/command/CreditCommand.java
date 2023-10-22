@@ -5,12 +5,12 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import com.mariesto.walletservice.constant.TransactionType;
 import com.mariesto.walletservice.dto.TransactionDTO;
 import com.mariesto.walletservice.persistence.entity.Wallet;
 import com.mariesto.walletservice.persistence.entity.WalletTransaction;
 import com.mariesto.walletservice.persistence.repository.WalletRepository;
-import com.mariesto.walletservice.persistence.repository.WalletTransactionsRepository;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -20,29 +20,28 @@ public class CreditCommand implements WalletCommand {
 
     private final WalletRepository walletRepository;
 
-    private final WalletTransactionsRepository walletTransactionsRepository;
-
     private final ModelMapper modelMapper;
 
-    public CreditCommand(WalletRepository walletRepository, WalletTransactionsRepository walletTransactionsRepository, ModelMapper modelMapper) {
+    public CreditCommand(WalletRepository walletRepository, ModelMapper modelMapper) {
         this.walletRepository = walletRepository;
-        this.walletTransactionsRepository = walletTransactionsRepository;
         this.modelMapper = modelMapper;
     }
 
+    @Transactional
     @Override
     public void execute(TransactionDTO transactionDTO) {
-        final Optional<Wallet> wallet = walletRepository.findWalletByUserId(transactionDTO.getUserId());
+        final Optional<Wallet> wallet = Optional.ofNullable(walletRepository.findWalletByUserId(transactionDTO.getUserId()));
         if (wallet.isEmpty()) {
             logger.error("wallet not found for user id : {}", transactionDTO.getUserId());
             return;
         }
-        WalletTransaction walletTransaction = modelMapper.map(transactionDTO, WalletTransaction.class);
-        walletTransaction.setTransactionType(TransactionType.CREDIT);
-        walletTransactionsRepository.save(walletTransaction);
 
         final Wallet fetchedWallet = wallet.get();
         Double finalBalance = fetchedWallet.getBalance() - transactionDTO.getAmount();
-        walletRepository.updateWalletBalance(finalBalance, transactionDTO.getUserId());
+        fetchedWallet.setBalance(finalBalance);
+
+        WalletTransaction walletTransaction = modelMapper.map(transactionDTO, WalletTransaction.class);
+        walletTransaction.setTransactionType(TransactionType.CREDIT);
+        fetchedWallet.addTransaction(walletTransaction);
     }
 }

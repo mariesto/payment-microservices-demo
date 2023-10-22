@@ -18,26 +18,26 @@ import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping (path = "/v1/api/payments")
+@RequestMapping (path = "/api/v1/payments", produces = "application/json")
 @Slf4j
 public class PaymentController {
     private final PaymentService paymentService;
 
-    @PostMapping (value = "/charge", consumes = "application/json", produces = "application/json")
+    @PostMapping (value = "/charge", consumes = "application/json")
     public ResponseEntity<ChargeResponse> chargePayment(@Valid @RequestBody final ChargeRequest request) {
         log.info("charge request : {}", request);
         final ChargeResponse response = paymentService.chargePayment(request);
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping (value = "/{paymentReferenceId}", produces = "application/json")
+    @GetMapping (value = "/{paymentReferenceId}")
     public ResponseEntity<PaymentStatusResponse> getPaymentStatus(@PathVariable ("paymentReferenceId") final String paymentReferenceId) {
         log.info("get payment status request with id : {}", paymentReferenceId);
         final PaymentStatusResponse response = paymentService.getPaymentStatus(paymentReferenceId);
         return ResponseEntity.ok().body(response);
     }
 
-    @PostMapping (value = "/refund/{paymentReferenceId}", produces = "application/json")
+    @PostMapping (value = "/refund/{paymentReferenceId}")
     public ResponseEntity<RefundResponse> refundPayment(@PathVariable ("paymentReferenceId") final String paymentReferenceId) {
         log.info("refund request for : {}", paymentReferenceId);
         final RefundResponse response = paymentService.refundPayment(paymentReferenceId);

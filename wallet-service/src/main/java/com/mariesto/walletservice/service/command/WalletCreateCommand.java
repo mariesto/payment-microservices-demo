@@ -4,6 +4,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import com.mariesto.walletservice.dto.TransactionDTO;
 import com.mariesto.walletservice.persistence.entity.Wallet;
 import com.mariesto.walletservice.persistence.repository.WalletRepository;
@@ -20,9 +21,10 @@ public class WalletCreateCommand implements WalletCommand {
         this.walletRepository = walletRepository;
     }
 
+    @Transactional
     @Override
     public void execute(TransactionDTO transactionDTO) {
-        Optional<Wallet> fetchedWallet = walletRepository.findWalletByUserId(transactionDTO.getUserId());
+        Optional<Wallet> fetchedWallet = Optional.ofNullable(walletRepository.findWalletByUserId(transactionDTO.getUserId()));
         if (fetchedWallet.isPresent()) {
             logger.error("wallet already exist for user_id : {}", transactionDTO.getUserId());
             return;
@@ -31,6 +33,5 @@ public class WalletCreateCommand implements WalletCommand {
         Wallet wallet = new Wallet();
         wallet.setUserId(transactionDTO.getUserId());
         wallet.setBalance(transactionDTO.getAmount());
-        walletRepository.save(wallet);
     }
 }

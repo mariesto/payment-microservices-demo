@@ -1,11 +1,13 @@
 package com.mariesto.walletservice.dto;
 
-import java.io.Serializable;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
-public class TransactionDTO implements Serializable {
-
+@Getter
+@Setter
+@NoArgsConstructor
+public class TransactionDTO {
     private String userId;
 
     private Double amount;

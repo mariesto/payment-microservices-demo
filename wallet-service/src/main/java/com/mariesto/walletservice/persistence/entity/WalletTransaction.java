@@ -1,6 +1,5 @@
 package com.mariesto.walletservice.persistence.entity;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -16,18 +15,15 @@ import lombok.Setter;
 @Getter
 @Setter
 public class WalletTransaction extends BaseEntity {
-    @Column
     @Enumerated (EnumType.STRING)
     private TransactionType transactionType;
 
-    @Column
-    private String customerPaymentId;
+    private String paymentReferenceId;
 
-    @Column
     private Double amount;
 
     @ManyToOne
-    @JoinColumn(name = "wallet_id")
+    @JoinColumn (name = "wallet_id")
     private Wallet wallet;
 
 }

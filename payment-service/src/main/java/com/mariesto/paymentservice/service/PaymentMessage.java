@@ -1,6 +1,5 @@
 package com.mariesto.paymentservice.service;
 
-import java.io.Serializable;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,8 +9,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class PaymentMessage implements Serializable {
-
+public class PaymentMessage {
     private String userId;
 
     private Double amount;

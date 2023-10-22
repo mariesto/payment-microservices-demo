@@ -5,8 +5,7 @@ import org.springframework.stereotype.Repository;
 import com.mariesto.paymentservice.persistence.entity.Payment;
 
 @Repository
-public interface PaymentRepository extends JpaRepository<Payment, String> {
-
+public interface PaymentRepository extends JpaRepository<Payment, Long> {
     Payment findPaymentByPaymentReferenceId(String paymentReferenceId);
 
 }

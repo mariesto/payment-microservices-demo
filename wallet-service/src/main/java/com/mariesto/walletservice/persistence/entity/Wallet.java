@@ -16,13 +16,21 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Wallet extends BaseEntity {
-    @Column
+    @Column (name = "user_id")
     private String userId;
 
-
-    @Column
     private Double balance;
 
     @OneToMany (mappedBy = "wallet", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<WalletTransaction> transactions = new ArrayList<>();
+
+    public void addTransaction(WalletTransaction transaction) {
+        this.transactions.add(transaction);
+        transaction.setWallet(this);
+    }
+
+    @Override
+    public String toString() {
+        return "Wallet{" + "userId='" + userId + '\'' + ", balance=" + balance + ", transactions=" + transactions + '}';
+    }
 }
