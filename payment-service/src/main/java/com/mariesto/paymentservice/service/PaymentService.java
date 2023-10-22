@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.UUID;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import com.mariesto.paymentservice.constant.PaymentStatus;
 import com.mariesto.paymentservice.constant.PaymentType;
 import com.mariesto.paymentservice.exception.PaymentException;
@@ -26,6 +27,7 @@ public class PaymentService {
 
     private final ModelMapper modelMapper;
 
+    @Transactional
     public ChargeResponse chargePayment(final ChargeRequest request) {
         final Payment payment = new Payment();
         payment.setPaymentReferenceId(UUID.randomUUID().toString());
@@ -36,10 +38,7 @@ public class PaymentService {
         payment.setPaymentStatus(PaymentStatus.INITIATED);
         final Payment persistedPayment = paymentRepository.save(payment);
 
-        PaymentMessage paymentMessage = new PaymentMessage();
-        paymentMessage.setUserId(payment.getUserId());
-        paymentMessage.setPaymentReferenceId(payment.getPaymentReferenceId());
-        paymentMessage.setAmount(payment.getAmount());
+        PaymentMessage paymentMessage = modelMapper.map(payment, PaymentMessage.class);
         publisher.publishCreditEvent(paymentMessage);
 
         return modelMapper.map(persistedPayment, ChargeResponse.class);
@@ -50,6 +49,7 @@ public class PaymentService {
         return modelMapper.map(payment, PaymentStatusResponse.class);
     }
 
+    @Transactional
     public RefundResponse refundPayment(final String paymentReferenceId) {
         final Payment payment = findPaymentByPaymentReferenceId(paymentReferenceId);
         if (payment.getPaymentStatus() == PaymentStatus.PROCESSING) {
@@ -63,6 +63,9 @@ public class PaymentService {
         refundPayment.setType(PaymentType.REFUND);
         refundPayment.setPaymentStatus(PaymentStatus.REFUNDED);
         final Payment persistedRefund = paymentRepository.save(refundPayment);
+
+        PaymentMessage paymentMessage = modelMapper.map(payment, PaymentMessage.class);
+        publisher.publishDebitEvent(paymentMessage);
 
         return modelMapper.map(persistedRefund, RefundResponse.class);
     }
