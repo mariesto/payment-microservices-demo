@@ -1,63 +1,54 @@
 package com.mariesto.walletservice.service.listener;
 
+import com.mariesto.walletservice.constant.TransactionType;
+import com.mariesto.walletservice.service.strategy.*;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 import com.mariesto.walletservice.dto.TransactionDTO;
-import com.mariesto.walletservice.service.command.CreditCommand;
-import com.mariesto.walletservice.service.command.DebitCommand;
-import com.mariesto.walletservice.service.command.TopUpCommand;
-import com.mariesto.walletservice.service.command.WalletCreateCommand;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class WalletListener {
-    private final TopUpCommand topUpCommand;
-
-    private final DebitCommand debitCommand;
-
-    private final CreditCommand creditCommand;
-
-    private final WalletCreateCommand walletCreateCommand;
 
     private final ModelMapper modelMapper;
 
-    public WalletListener(TopUpCommand topUpCommand, DebitCommand debitCommand, CreditCommand creditCommand, WalletCreateCommand walletCreateCommand,
-            ModelMapper modelMapper) {
-        this.topUpCommand = topUpCommand;
-        this.debitCommand = debitCommand;
-        this.creditCommand = creditCommand;
-        this.walletCreateCommand = walletCreateCommand;
-        this.modelMapper = modelMapper;
-    }
+    private final WalletContext walletContext;
 
     @RabbitListener (queues = "${rabbit-mq-props.to-pup-queue}")
     public void handleTopUp(WalletMessage walletMessage) {
         log.info("[x] consume top-up message : {}", walletMessage);
+        walletContext.setWalletStrategy(TransactionType.TOP_UP);
         TransactionDTO transactionDTO = getTransactionDtoFromWalletMessage(walletMessage);
-        topUpCommand.execute(transactionDTO);
+        walletContext.execute(transactionDTO);
     }
 
     @RabbitListener (queues = "${rabbit-mq-props.credit-queue}")
     public void handleCredit(WalletMessage walletMessage) {
         log.info("[x] consume credit message : {}", walletMessage);
+        walletContext.setWalletStrategy(TransactionType.CREDIT);
         TransactionDTO transactionDTO = getTransactionDtoFromWalletMessage(walletMessage);
-        creditCommand.execute(transactionDTO);
+        walletContext.execute(transactionDTO);
     }
 
     @RabbitListener (queues = "${rabbit-mq-props.debit-queue}")
     public void handleDebit(WalletMessage walletMessage) {
         log.info("[x] consume debit message : {}", walletMessage);
+        walletContext.setWalletStrategy(TransactionType.DEBIT);
         TransactionDTO transactionDTO = getTransactionDtoFromWalletMessage(walletMessage);
-        debitCommand.execute(transactionDTO);
+        walletContext.execute(transactionDTO);
     }
 
     @RabbitListener (queues = "${rabbit-mq-props.wallet-create-queue}")
     public void handleUserCreation(WalletMessage walletMessage) {
         log.info("[x] consume new user create message : {}", walletMessage);
+        walletContext.setWalletStrategy(TransactionType.CREATE_WALLET);
+        log.info("[STRATEGY-CONTEXT] : {}", walletContext.getWalletStrategy().toString());
         TransactionDTO transactionDTO = getTransactionDtoFromWalletMessage(walletMessage);
-        walletCreateCommand.execute(transactionDTO);
+        walletContext.execute(transactionDTO);
     }
 
     private TransactionDTO getTransactionDtoFromWalletMessage(WalletMessage walletMessage) {

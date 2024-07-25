@@ -6,7 +6,7 @@
         <groupId>com.mariesto</groupId>
         <artifactId>payment-microservices-demo</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath/>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>payment-provider-gateway-service</artifactId>

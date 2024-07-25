@@ -1,35 +1,31 @@
-package com.mariesto.walletservice.service.command;
+package com.mariesto.walletservice.service.strategy;
 
-import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import com.mariesto.walletservice.dto.TransactionDTO;
 import com.mariesto.walletservice.persistence.entity.Wallet;
 import com.mariesto.walletservice.persistence.repository.WalletRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j
+import java.util.Optional;
+
 @Component
-public class WalletCreateCommand implements WalletCommand {
-    private final Logger logger = LoggerFactory.getLogger(WalletCreateCommand.class);
+@Slf4j
+@RequiredArgsConstructor
+public class CreateWalletStrategy implements WalletStrategy {
 
     private final WalletRepository walletRepository;
-
-    public WalletCreateCommand(WalletRepository walletRepository) {
-        this.walletRepository = walletRepository;
-    }
 
     @Transactional
     @Override
     public void execute(TransactionDTO transactionDTO) {
         Optional<Wallet> fetchedWallet = Optional.ofNullable(walletRepository.findWalletByUserId(transactionDTO.getUserId()));
         if (fetchedWallet.isPresent()) {
-            logger.error("wallet already exist for user_id : {}", transactionDTO.getUserId());
+            log.error("wallet already exist for user_id : {}", transactionDTO.getUserId());
             return;
         }
-
+        log.info("Creating wallet for user_id : {}", transactionDTO.getUserId());
         Wallet wallet = new Wallet();
         wallet.setUserId(transactionDTO.getUserId());
         wallet.setBalance(transactionDTO.getAmount());

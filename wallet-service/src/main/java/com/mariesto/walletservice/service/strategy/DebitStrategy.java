@@ -1,6 +1,9 @@
-package com.mariesto.walletservice.service.command;
+package com.mariesto.walletservice.service.strategy;
 
 import java.util.Optional;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,21 +14,16 @@ import com.mariesto.walletservice.dto.TransactionDTO;
 import com.mariesto.walletservice.persistence.entity.Wallet;
 import com.mariesto.walletservice.persistence.entity.WalletTransaction;
 import com.mariesto.walletservice.persistence.repository.WalletRepository;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Component
-public class CreditCommand implements WalletCommand {
-    private final Logger logger = LoggerFactory.getLogger(CreditCommand.class);
+@Slf4j
+@RequiredArgsConstructor
+public class DebitStrategy implements WalletStrategy {
+    private final Logger logger = LoggerFactory.getLogger(DebitStrategy.class);
 
     private final WalletRepository walletRepository;
 
     private final ModelMapper modelMapper;
-
-    public CreditCommand(WalletRepository walletRepository, ModelMapper modelMapper) {
-        this.walletRepository = walletRepository;
-        this.modelMapper = modelMapper;
-    }
 
     @Transactional
     @Override
@@ -37,11 +35,12 @@ public class CreditCommand implements WalletCommand {
         }
 
         final Wallet fetchedWallet = wallet.get();
-        Double finalBalance = fetchedWallet.getBalance() - transactionDTO.getAmount();
+        Double finalBalance = fetchedWallet.getBalance() + transactionDTO.getAmount();
         fetchedWallet.setBalance(finalBalance);
 
-        WalletTransaction walletTransaction = modelMapper.map(transactionDTO, WalletTransaction.class);
-        walletTransaction.setTransactionType(TransactionType.CREDIT);
-        fetchedWallet.addTransaction(walletTransaction);
+        WalletTransaction transaction = modelMapper.map(transactionDTO, WalletTransaction.class);
+        transaction.setTransactionType(TransactionType.DEBIT);
+
+        fetchedWallet.addTransaction(transaction);
     }
 }

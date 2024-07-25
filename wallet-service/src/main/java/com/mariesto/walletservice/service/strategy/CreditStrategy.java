@@ -1,6 +1,12 @@
-package com.mariesto.walletservice.service.command;
+package com.mariesto.walletservice.service.strategy;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.Optional;
+
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,19 +17,17 @@ import com.mariesto.walletservice.dto.TransactionDTO;
 import com.mariesto.walletservice.persistence.entity.Wallet;
 import com.mariesto.walletservice.persistence.entity.WalletTransaction;
 import com.mariesto.walletservice.persistence.repository.WalletRepository;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
-public class DebitCommand implements WalletCommand {
-    private final Logger logger = LoggerFactory.getLogger(DebitCommand.class);
+@Slf4j
+@RequiredArgsConstructor
+public class CreditStrategy implements WalletStrategy {
+    private final Logger logger = LoggerFactory.getLogger(CreditStrategy.class);
 
     private final WalletRepository walletRepository;
 
     private final ModelMapper modelMapper;
-
-    public DebitCommand(WalletRepository walletRepository, ModelMapper modelMapper) {
-        this.walletRepository = walletRepository;
-        this.modelMapper = modelMapper;
-    }
 
     @Transactional
     @Override
@@ -35,12 +39,11 @@ public class DebitCommand implements WalletCommand {
         }
 
         final Wallet fetchedWallet = wallet.get();
-        Double finalBalance = fetchedWallet.getBalance() + transactionDTO.getAmount();
+        Double finalBalance = fetchedWallet.getBalance() - transactionDTO.getAmount();
         fetchedWallet.setBalance(finalBalance);
 
-        WalletTransaction transaction = modelMapper.map(transactionDTO, WalletTransaction.class);
-        transaction.setTransactionType(TransactionType.DEBIT);
-
-        fetchedWallet.addTransaction(transaction);
+        WalletTransaction walletTransaction = modelMapper.map(transactionDTO, WalletTransaction.class);
+        walletTransaction.setTransactionType(TransactionType.CREDIT);
+        fetchedWallet.addTransaction(walletTransaction);
     }
 }

@@ -1,7 +1,6 @@
 server:
   port: 9991
 
-
 spring:
   application:
     name: payment-service

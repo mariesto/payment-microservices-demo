@@ -1,7 +1,9 @@
-package com.mariesto.walletservice.service.command;
+package com.mariesto.walletservice.service.strategy;
 
 import java.util.Optional;
 import java.util.UUID;
+
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -13,16 +15,13 @@ import com.mariesto.walletservice.persistence.entity.WalletTransaction;
 import com.mariesto.walletservice.persistence.repository.WalletRepository;
 import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Component
-public class TopUpCommand implements WalletCommand {
-    private final Logger logger = LoggerFactory.getLogger(TopUpCommand.class);
+@Slf4j
+@RequiredArgsConstructor
+public class TopUpStrategy implements WalletStrategy {
+    private final Logger logger = LoggerFactory.getLogger(TopUpStrategy.class);
 
     private final WalletRepository walletRepository;
-
-    public TopUpCommand(WalletRepository walletRepository) {
-        this.walletRepository = walletRepository;
-    }
 
     @Transactional
     @Override

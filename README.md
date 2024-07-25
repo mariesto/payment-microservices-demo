@@ -13,26 +13,26 @@ Low-Level Design (ERD)
 ### Functional Requirement
 
 - payment-service
-    - able to perform charge payment
-    - able to perform refund
-    - able to get latest payment status
+  1. [x] able to perform charge payment
+  2. [x] able to perform refund
+  3. [x] able to get latest payment status
 - wallet-service
-    - able to top-up the wallet balance
-    - able to credit user wallet balance
-    - able to debit user wallet balance
-    - able to get list of user wallet transaction
+  1. [x] able to top-up the wallet balance
+  2. [x] able to credit user wallet balance
+  3. [x] able to debit user wallet balance
+  4. [x] able to get list of user wallet transaction
 - payment-provider-gateway-service
-    - able to simulate payment flow to respective external payment provider
+  1. [ ] able to simulate payment flow to respective external payment provider
 - order-service
-    - CRUD order items
-    - checkout order (payment)
-    - cancel order (refund)
+  1. [x] CRUD order items
+  2. [x] checkout order (payment)
+  3. [x] cancel order (refund)
 - user-service
-    - CRUD
+  1. [x] CRUD
 - API gateway-service
-    - able to route the request accordingly
+  1. [x] able to route the request accordingly
 - registry-service
-    - able to monitor all services
+  1. able to monitor all services
 
 ---
 

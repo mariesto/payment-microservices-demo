@@ -1,16 +1,17 @@
 #!/bin/bash
 
-MODULES_DIR="/Users/amendomariestositinjak/Desktop/projects/payment-microservices-demo/payment-microservices-demo"
+MODULES_DIR="/Users/mariesto/Desktop/java-project/payment-microservices-demo"
+MODULES=( "wallet-service" )
 
-MODULES=( "wallet-service" "payment-service" )
-
-for MODULE in "${MODULES[@]}"
-do
-    cd "${MODULES_DIR}/${MODULE}"
-    mvn clean package
+# Loop through each module and build & push Docker images
+for MODULE in "${MODULES[@]}"; do
+    cd "${MODULES_DIR}/${MODULE}" || exit
+    mvn clean install
     docker build -t "${MODULE}" .
 done
 
-# shellcheck disable=SC2164
-cd /Users/amendomariestositinjak/Desktop/projects/payment-microservices-demo/payment-microservices-demo
+# Navigate back to the project root directory
+cd "${MODULES_DIR}" || exit
+
+# Run Docker Compose
 docker-compose -f docker-compose.yml up -d
