@@ -1,13 +1,13 @@
 #!/bin/bash
 
 MODULES_DIR="/Users/mariesto/Desktop/java-project/payment-microservices-demo"
-MODULES=( "wallet-service" )
+MODULES=( "order-service" )
 
 # Loop through each module and build & push Docker images
 for MODULE in "${MODULES[@]}"; do
     cd "${MODULES_DIR}/${MODULE}" || exit
     mvn clean install
-    docker build -t "${MODULE}" .
+    docker build --no-cache -t "${MODULE}" .
 done
 
 # Navigate back to the project root directory

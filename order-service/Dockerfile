@@ -1,3 +1,4 @@
-FROM openjdk:11
-COPY target/order-service-0.0.1-SNAPSHOT.jar order-service.jar
-ENTRYPOINT ["java", "-jar", "/order-service.jar"]
+FROM eclipse-temurin:21
+WORKDIR /app
+COPY /target/order-service-0.0.1-SNAPSHOT.jar app.jar
+ENTRYPOINT ["java", "-jar", "app.jar"]

@@ -1,3 +1,6 @@
+server:
+  port: 9996
+
 spring:
   application:
     name: order-service
@@ -11,10 +14,16 @@ spring:
       ddl-auto: create
     generate-ddl: true
   datasource:
-    url: jdbc:postgresql://192.168.228.2:5432/order-db?createDatabaseIfNotExist=true
+    url: jdbc:postgresql://order-db:5432/order-db?createDatabaseIfNotExist=true
     username: postgres
     password: order123
     driver-class-name: org.postgresql.Driver
-server:
-  port: 9996
+
+rabbit-mq-props:
+  host: rabbit-mq
+  durable: true
+  exclusive: false
+  auto-delete: false
+  exchange: order-exchange
+  cancel-order-key: order.cancel
 

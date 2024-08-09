@@ -1,12 +1,12 @@
 package com.mariesto.orderservice.persistence.entity;
 
 import com.mariesto.orderservice.constant.OrderStatus;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
@@ -27,11 +27,9 @@ public class Order {
 
     private String userId;
 
-    @Column
     @CreationTimestamp
     private Timestamp createdAt;
 
-    @Column
     @UpdateTimestamp
     private Timestamp updatedAt;
 

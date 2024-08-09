@@ -30,7 +30,6 @@ services:
     build:
       context: ./wallet-service
       dockerfile: Dockerfile
-    image: mariesto/wallet-service:latest
     ports:
       - "9994:9994"
     depends_on:
@@ -60,7 +59,6 @@ services:
     build:
       context: ./payment-service
       dockerfile: Dockerfile
-    image: mariesto/payment-service:latest
     ports:
       - "9991:9991"
     depends_on:
@@ -84,6 +82,21 @@ services:
       - "9956:9956"
     networks:
       - payment-microservices-network
+
+  order-service:
+    container_name: order-service
+    build:
+      context: ./order-service
+      dockerfile: Dockerfile
+    ports:
+      - "9996:9996"
+    depends_on:
+      - rabbit-mq
+      - order-db
+    networks:
+      - payment-microservices-network
+    environment:
+      RABBIT_MQ_HOST: rabbit-mq
 
   user-db:
     container_name: user-db

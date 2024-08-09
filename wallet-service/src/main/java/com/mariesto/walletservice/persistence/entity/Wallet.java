@@ -2,26 +2,22 @@ package com.mariesto.walletservice.persistence.entity;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table (name = "wallets")
+@Table(name = "wallets")
 @Getter
 @Setter
 public class Wallet extends BaseEntity {
-    @Column (name = "user_id")
+
     private String userId;
 
     private Double balance;
 
-    @OneToMany (mappedBy = "wallet", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "wallet", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<WalletTransaction> transactions = new ArrayList<>();
 
     public void addTransaction(WalletTransaction transaction) {
